@@ -23,14 +23,13 @@ func DeleteById(id int) {
 	fmt.Println("Deletado com sucesso")
 }
 
-func PutByid(id int, newPersona models.Personalidade) models.Personalidade {
+func PutByid(id int, newPersona *models.Personalidade) {
 	var novaPersonalidade = models.Personalidade{
 		Id:       id,
 		Nome:     newPersona.Nome,
 		Historia: newPersona.Historia,
 	}
 	database.DB.Updates(novaPersonalidade)
-	return newPersona
 }
 
 func GetById(id int) models.Personalidade {

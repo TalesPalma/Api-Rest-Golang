@@ -18,13 +18,19 @@ func Home(w http.ResponseWriter, r *http.Request) {
 func Personalidades(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(services.Home())
 }
+
+type Error struct {
+	Err string `json:"error"`
+}
+
 func ReturnById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	convertId, _ := strconv.Atoi(id)
 	personalidade := services.GetById(convertId)
 	if personalidade.Id == 0 {
-		w.Write([]byte("Personalidade não encontrada"))
+		err := Error{Err: "Not found"}
+		json.NewEncoder(w).Encode(err)
 		return
 	}
 
@@ -32,7 +38,6 @@ func ReturnById(w http.ResponseWriter, r *http.Request) {
 }
 
 func PersonalidadePost(w http.ResponseWriter, r *http.Request) {
-
 	var novaPersonalidade models.Personalidade
 	err := json.NewDecoder(r.Body).Decode(&novaPersonalidade) // pega o body da requisição e decodifica em struct (decodificar)
 
@@ -60,6 +65,6 @@ func PersonalidadePut(w http.ResponseWriter, r *http.Request) {
 
 	var newPersonalidade models.Personalidade
 	json.NewDecoder(r.Body).Decode(&newPersonalidade)
-	services.PutByid(convertId, newPersonalidade)
+	services.PutByid(convertId, &newPersonalidade)
 	json.NewEncoder(w).Encode(newPersonalidade)
 }
