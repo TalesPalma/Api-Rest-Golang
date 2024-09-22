@@ -5,6 +5,7 @@ import (
 
 	"github.com/TalesPalma/api-go-rest/controllers"
 	"github.com/TalesPalma/api-go-rest/middleware"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -17,5 +18,5 @@ func HandleRequest() {
 	gorila.HandleFunc("/personalidade", controllers.PersonalidadePost).Methods("Post")
 	gorila.HandleFunc("/personalidade/{id}", controllers.PersonalidadePut).Methods("Put")
 	gorila.HandleFunc("/personalidade/{id}", controllers.PersonalidadeDelete).Methods("Delete")
-	http.ListenAndServe(":8080", gorila)
+	http.ListenAndServe(":8080", handlers.CORS(handlers.AllowedOrigins([]string{"*"}))(gorila))
 }
